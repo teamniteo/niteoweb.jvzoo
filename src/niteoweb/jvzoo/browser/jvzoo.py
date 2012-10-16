@@ -97,8 +97,10 @@ class JVZooView(BrowserView):
             'product_name': params['cprodtitle'],
             'affiliate': params['ctransaffiliate'],
             'last_purchase_id': params['ctransreceipt'],
-            # TODO: ctranstime
-            'last_purchase_timestamp': DateTime("%s %s" % (params['purchase_date'], params['purchase_time'])),
+            'last_purchase_timestamp': DateTime(
+                int(params['ctranstime']),
+                datefmt='epoch'
+            ),
         }
 
     def create_or_update_member(self, username, data):
