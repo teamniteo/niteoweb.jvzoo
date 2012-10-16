@@ -1,0 +1,33 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:plone="http://namespaces.plone.org/plone"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="niteoweb.jvzoo">
+
+  <!-- This is needed if we want to specify cmf.ManagePortal permission -->
+  <include package="Products.CMFCore" file="permissions.zcml" />
+
+  <!-- A view that jvzoo calls after a purchase -->
+  <browser:page
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    name="jvzoo"
+    class=".jvzoo.JVZooView"
+    permission="zope2.View"
+    />
+
+  <!-- Control panel configlet -->
+  <include package="plone.app.registry" />
+  <browser:page
+    name="jvzoo-settings"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".controlpanel.JVZooSettingsControlPanel"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:resource
+    name="click2sell_icon.png"
+    image="click2sell_icon.png"
+    />
+
+</configure>
+

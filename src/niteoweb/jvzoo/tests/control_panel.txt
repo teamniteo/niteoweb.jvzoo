@@ -1,0 +1,85 @@
+=========================
+ click2sell control panel
+=========================
+
+These tests are adapted from that in plone.app.controlpanel
+
+First some initial setup code.
+
+    >>> from plone.testing.z2 import Browser
+    >>> browser = Browser(self.layer['app'])
+
+    >>> from zope.component import getUtility
+    >>> from plone.registry.interfaces import IRegistry
+    >>> registry = getUtility(IRegistry)
+
+    >>> from niteoweb.click2sell.interfaces import IClick2SellSettings
+    >>> settings = registry.forInterface(IClick2SellSettings)
+
+Login as test user.
+
+    >>> from plone.app.testing import TEST_USER_NAME
+    >>> from plone.app.testing import TEST_USER_PASSWORD
+    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
+    >>> browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
+
+Set Click2Sell SecretKey.
+
+    >>> settings.secretkey = u'secret'
+
+
+Viewing the click2sell control panel
+-----------------------------------------------
+
+    >>> browser.open('http://nohost/plone/@@click2sell-settings')
+    >>> browser.url
+    'http://nohost/plone/@@click2sell-settings'
+
+Click the save button without making any changes:
+
+    >>> browser.getControl(name="form.buttons.save").click()
+    >>> browser.url.endswith('click2sell-settings')
+    True
+
+We should get a status message:
+
+    >>> 'There were some errors' in browser.contents
+    True
+    >>> 'Required input is missing' in browser.contents
+    True
+
+Now click the cancel button:
+
+    >>> browser.getControl(name="form.buttons.cancel").click()
+    >>> browser.url.endswith('plone_control_panel')
+    True
+
+There should be still no changes:
+
+    >>> 'Edit cancelled.' in browser.contents
+    True
+
+Make some changes
+-----------------
+
+    >>> browser.open('http://nohost/plone/@@click2sell-settings')
+    >>> browser.url.endswith('click2sell-settings')
+    True
+
+    >>> browser.getControl(name='form.widgets.secretkey').value = 'new secret'
+
+Click the save button:
+
+    >>> browser.getControl(name="form.buttons.save").click()
+    >>> browser.url.endswith('plone_control_panel')
+    True
+
+We should be informed that something has changed:
+
+    >>> 'Changes saved.' in browser.contents
+    True
+
+Make sure the changes have been applied correctly to the tool:
+
+    >>> settings.secretkey
+    u'new secret'
