@@ -7,7 +7,7 @@
   <!-- This is needed if we want to specify cmf.ManagePortal permission -->
   <include package="Products.CMFCore" file="permissions.zcml" />
 
-  <!-- A view that jvzoo calls after a purchase -->
+  <!-- A view that JVZoo calls after a purchase -->
   <browser:page
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     name="jvzoo"
@@ -25,8 +25,8 @@
     />
 
   <browser:resource
-    name="click2sell_icon.png"
-    image="click2sell_icon.png"
+    name="jvzoo_icon.png"
+    image="jvzoo_icon.png"
     />
 
 </configure>
