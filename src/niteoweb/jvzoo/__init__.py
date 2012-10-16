@@ -4,7 +4,7 @@
 from zope.i18nmessageid import MessageFactory
 from zope.interface import Invalid
 
-Click2SellMessageFactory = MessageFactory('niteoweb.click2sell')
+JVZooMessageFactory = MessageFactory('niteoweb.jvzoo')
 
 
 def initialize(context):
@@ -23,7 +23,7 @@ def parse_mapping(mapping):
     :rtype: dict
     :return: product_ids as keys, group_names as values
 
-    >>> from niteoweb.click2sell import parse_mapping
+    >>> from niteoweb.jvzoo import parse_mapping
 
     Test formatting of a list of valid mappings
     >>> parse_mapping(['1|basic-members', '2|premium-members'])

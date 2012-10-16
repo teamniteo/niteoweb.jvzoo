@@ -44,6 +44,7 @@ setup(
         'test': [
             'mock',
             'plone.app.testing',
+            'Products.PloneTestCase',
             'repoze.sphinx.autointerface',  # this is not really used in tests
             'unittest2',
         ],
