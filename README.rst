@@ -112,21 +112,23 @@ group, but also kept in the old group. No information is removed/deleted.
 Test it
 =======
 
-TODO: how to test
 You are now ready to do a test buy! Go back to ``Sellers`` and click
-``Test BUY``. Before you finish the transaction, you need to set up your Plone
+``Test Purchases``. Select a product, click ``Create Test Purchase Code`` and
+finish by clicking the link in ``Buy / Link`` column in the table below. In
+order for the purchase link to work, the product needs to be activated in
+``Sellers Dashboard`` (select a product and check ``Allow Sales``).
+
+Before you finish the transaction, you of course need to set up your Plone
 site to receive JVZoo server notifications.
 
 Confirm by logging-in to `JVZoo <http://jvzoo.eu>`_ and checking to
-see if there were any purchases. Also check if your receive an email with
-username and password for accessing your site and try to login with them.
+see if there were any purchases (on ``Sellers`` tab). Also check if your
+received an email with username and password for accessing your site and try to
+login with them.
 
 
 Known issues
 ============
-
-TODO: what issues
-The following known issues exist:
 
 * If members stop paying for monthly or yearly subscriptions, you have to
   manually delete them from your Plone site.
