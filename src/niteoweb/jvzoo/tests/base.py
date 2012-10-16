@@ -41,21 +41,21 @@ class MockedLoggingHandler(logging.Handler):
                 setattr(cls, attr, [])
 
 
-class NiteowebClick2sellLayer(PloneSandboxLayer):
+class NiteowebJVZooLayer(PloneSandboxLayer):
 
     defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         """Set up Zope."""
         # Load ZCML
-        import niteoweb.click2sell
-        self.loadZCML(package=niteoweb.click2sell)
-        z2.installProduct(app, 'niteoweb.click2sell')
+        import niteoweb.jvzoo
+        self.loadZCML(package=niteoweb.jvzoo)
+        z2.installProduct(app, 'niteoweb.jvzoo')
 
     def setUpPloneSite(self, portal):
         """Set up Plone."""
         # Install into Plone site using portal_setup
-        applyProfile(portal, 'niteoweb.click2sell:default')
+        applyProfile(portal, 'niteoweb.jvzoo:default')
 
         # Login as Manager
         setRoles(portal, TEST_USER_ID, ['Manager'])
@@ -75,19 +75,19 @@ class NiteowebClick2sellLayer(PloneSandboxLayer):
 
         # add a logging handler that stores everything in a list so we can
         # later assert on it
-        logger = logging.getLogger('niteoweb.click2sell')
+        logger = logging.getLogger('niteoweb.jvzoo')
         logger.addHandler(MockedLoggingHandler())
 
     def tearDownZope(self, app):
         """Tear down Zope."""
-        z2.uninstallProduct(app, 'niteoweb.click2sell')
+        z2.uninstallProduct(app, 'niteoweb.jvzoo')
 
 
-FIXTURE = NiteowebClick2sellLayer()
+FIXTURE = NiteowebJVZooLayer()
 INTEGRATION_TESTING = IntegrationTesting(
-    bases=(FIXTURE,), name="NiteowebClick2sellLayer:Integration")
+    bases=(FIXTURE,), name="NiteowebJVZooLayer:Integration")
 FUNCTIONAL_TESTING = FunctionalTesting(
-    bases=(FIXTURE,), name="NiteowebClick2sellLayer:Functional")
+    bases=(FIXTURE,), name="NiteowebJVZooLayer:Functional")
 
 
 class IntegrationTestCase(unittest.TestCase):
@@ -102,7 +102,7 @@ class FunctionalTestCase(unittest.TestCase):
     layer = FUNCTIONAL_TESTING
 
 
-class Click2SellControlPanelTestCase(FunctionalTestCase, ControlPanelTestCase):
+class JvzooControlPanelTestCase(FunctionalTestCase, ControlPanelTestCase):
     """Test case used for control panel tests, with some convenience
     methods from plone.app.controlpanel.
     """

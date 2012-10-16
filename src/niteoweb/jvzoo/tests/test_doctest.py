@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 """Doctest runner."""
 
-from niteoweb.click2sell.tests.base import Click2SellControlPanelTestCase
+from niteoweb.jvzoo.tests.base import JvzooControlPanelTestCase
 from Testing import ZopeTestCase as ztc
 import doctest
 import unittest2 as unittest
 
 
 def test_suite():
-    import niteoweb.click2sell
+    import niteoweb.jvzoo
 
     return unittest.TestSuite([
 
         # docstring unit-tests
-        doctest.DocTestSuite(niteoweb.click2sell),
+        doctest.DocTestSuite(niteoweb.jvzoo),
 
-        # Test the Click2Sell control panel
+        # Test the JVZoo control panel
         ztc.ZopeDocFileSuite(
-            'tests/control_panel.txt', package='niteoweb.click2sell',
-            test_class=Click2SellControlPanelTestCase,
+            'tests/control_panel.txt', package='niteoweb.jvzoo',
+            test_class=JvzooControlPanelTestCase,
             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
         ),
     ])

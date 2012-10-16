@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Test all aspects of the @@click2sell BrowserView
+Test all aspects of the @@jvzoo BrowserView
 ------------------------------------------------
 """
 
 from DateTime import DateTime
-from niteoweb.click2sell.interfaces import IClick2SellSettings
-from niteoweb.click2sell.tests.base import IntegrationTestCase
-from niteoweb.click2sell.tests.base import MockedLoggingHandler as logger
+from niteoweb.jvzoo.interfaces import IJVZooSettings
+from niteoweb.jvzoo.tests.base import IntegrationTestCase
+from niteoweb.jvzoo.tests.base import MockedLoggingHandler as logger
 from plone.app.testing import TEST_USER_NAME
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
@@ -17,13 +17,13 @@ import mock
 import unittest2 as unittest
 
 
-class TestClick2Sell(IntegrationTestCase):
-    """Test all aspects of @@Click2Sell."""
+class TestJVZoo(IntegrationTestCase):
+    """Test all aspects of @@jvzoo."""
 
     def setUp(self):
         """Prepare testing environment."""
         self.portal = self.layer['portal']
-        self.view = self.portal.restrictedTraverse('click2sell')
+        self.view = self.portal.restrictedTraverse('jvzoo')
         self.registration = getToolByName(self.portal, 'portal_registration')
         self.membership = getToolByName(self.portal, 'portal_membership')
         self.groups = getToolByName(self.portal, 'portal_groups')
@@ -32,7 +32,7 @@ class TestClick2Sell(IntegrationTestCase):
 
         # configure product_id to group mapping; the groups must also exist
         registry = getUtility(IRegistry)
-        self.settings = registry.forInterface(IClick2SellSettings)
+        self.settings = registry.forInterface(IJVZooSettings)
         self.settings.mapping = ["1|basic-members", "2|premium-members"]
         self.settings.secretkey = u'secret'
         self.groups.addGroup('basic-members')
@@ -44,12 +44,12 @@ class TestClick2Sell(IntegrationTestCase):
         logger.reset()
 
     def test_call_with_no_POST(self):
-        """Test @@clicbank's response when POST is empty."""
+        """Test @@jvzoo's response when POST is empty."""
         html = self.view()
         self.failUnless('No POST request.' in html)
 
     def test_call_with_missing_parameter(self):
-        """Test @@clicbank's response when POST is missing a parameter."""
+        """Test @@jvzoo's response when POST is missing a parameter."""
 
         # put something into self.request.form so it's not empty
         self.portal.REQUEST.form = dict(foo='bar')
@@ -60,7 +60,7 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertEqual(logger.error[0][:72], "POST parameter missing: u'acquirer_transaction_id'")
 
     def test_call_with_missing_secret_key(self):
-        """Test @@clicbank's response when C2S secret-key is not set."""
+        """Test @@jvzoo's response when C2S secret-key is not set."""
 
         # put something into self.request.form so it's not empty
         self.portal.REQUEST.form = dict(foo='bar')
@@ -72,9 +72,9 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertEqual(html, "POST handling failed: C2S secret-key is not set!")
         self.assertEqual(logger.error[0], "POST handling failed: C2S secret-key is not set!")
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._verify_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
     def test_call_with_invalid_checksum(self, verify_post):
-        """Test @@clicbank's response when checksum cannot be verified."""
+        """Test @@jvzoo's response when checksum cannot be verified."""
 
         # put something into self.request.form so it's not empty
         self.portal.REQUEST.form = dict(foo='bar')
@@ -87,9 +87,9 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertEqual(html, 'Checksum verification failed.')
         self.assertEqual(logger.error[0][:51], "Checksum verification failed.")
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._verify_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
     def test_call_with_internal_exception(self, verify_post):
-        """Test @@clicbank's response when there is an internal problem with the
+        """Test @@jvzoo's response when there is an internal problem with the
         code.
         """
 
@@ -104,11 +104,11 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertEqual(html, 'POST handling failed: Internal foo.')
         self.assertEqual(logger.error[0], "POST handling failed: Internal foo.")
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._verify_POST')
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._parse_POST')
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView.create_or_update_member')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._parse_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.create_or_update_member')
     def test_call_with_valid_POST(self, create_or_update_member, parse_post, verify_post):
-        """Test @@clicbank's response when POST is valid."""
+        """Test @@jvzoo's response when POST is valid."""
 
         # put something into self.request.form so it's not empty
         self.portal.REQUEST.form = dict(value='non empty value')
@@ -201,7 +201,7 @@ class TestClick2Sell(IntegrationTestCase):
 
         self.assertEqual(result, expected)
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._generate_password')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
     def test_create_member(self, generate_password):
         """Test creating a new member out of POST parameters."""
         generate_password.return_value = 'secret123'
@@ -240,8 +240,8 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertIn('p: %(password)s' % test_data, msg)
 
         # test that we created group
-        self.assertIn('click2sell', self.groups.getGroupIds())
-        self.assertIn('click2sell', member.getGroups())
+        self.assertIn('jvzoo', self.groups.getGroupIds())
+        self.assertIn('jvzoo', member.getGroups())
 
         # test that member was added to product group
         self.assertIn('basic-members', member.getGroups())
@@ -301,7 +301,7 @@ class TestClick2Sell(IntegrationTestCase):
         # test email
         self.assertEqual(len(self.mailhost.messages), 0)
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.Click2SellView._generate_password')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
     def test_create_member_without_group_mapping(self, generate_password):
         """Test creating a new member when group mapping does not match
         any group to member's product_id.
@@ -343,14 +343,14 @@ class TestClick2Sell(IntegrationTestCase):
         self.assertIn('u: %(username)s' % test_data, msg)
         self.assertIn('p: %(password)s' % test_data, msg)
 
-        # test that we created click2sell group
-        self.assertIn('click2sell', self.groups.getGroupIds())
-        self.assertIn('click2sell', member.getGroups())
+        # test that we created jvzoo group
+        self.assertIn('jvzoo', self.groups.getGroupIds())
+        self.assertIn('jvzoo', member.getGroups())
 
         # test that member is not added to any product groups
-        self.assertEqual(['click2sell', 'AuthenticatedUsers'], member.getGroups())
+        self.assertEqual(['jvzoo', 'AuthenticatedUsers'], member.getGroups())
 
-    @mock.patch('niteoweb.click2sell.browser.click2sell.logger')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.logger')
     def test_add_to_product_group_edge_cases(self, logger):
         """Test that member is added to a product group."""
         # first, let's test what happens if product_id is not found
@@ -365,7 +365,7 @@ class TestClick2Sell(IntegrationTestCase):
             " group, because group does not exist: 'foo-members'")
 
         # now let's add a member to a group and test that nothing happens when
-        # @@click2sell want's to add a member to this group again
+        # @@jvzoo want's to add a member to this group again
         self.groups.addPrincipalToGroup(TEST_USER_NAME, 'basic-members')
         self.view._add_to_product_group(TEST_USER_NAME, '1')
 
@@ -381,7 +381,7 @@ class TestClick2Sell(IntegrationTestCase):
         )
 
         # set portal properties
-        self.portal.title = u'Click2Sell Integration Site'
+        self.portal.title = u'JVZoo Integration Site'
         self.portal.email_from_address = "mail@plone.test"
 
         # run method
@@ -394,7 +394,7 @@ class TestClick2Sell(IntegrationTestCase):
         # test email headers
         self.failUnless('To: %(email)s' % test_data in msg)
         self.failUnless('From: %s' % self.portal.email_from_address in msg)
-        self.failUnless('Subject: =?utf-8?q?Your_Click2Sell_Integration_Site_login_credentials' in msg)
+        self.failUnless('Subject: =?utf-8?q?Your_JVZoo_Integration_Site_login_credentials' in msg)
 
         # test email body text
         self.failUnless('Hello %(fullname)s,' % test_data in msg)
