@@ -18,5 +18,4 @@ run something along these lines:
 
 .. sourcecode:: bash
 
-    TODO: replace this with jvzoo's request
-    $ curl -d "buyer_email=test@niteoweb.com&buyer_name=John&buyer_surname=Smith&product_id=1&product_name=TestProduct&affiliate_username=affiliate@niteoweb.com&c2s_transaction_id=1&purchase_date=2012/01/01&purchase_time=00:00:00&secretkey=secret&acquirer_transaction_id=123&checksum=B457E9433F98EF22AA9DD9BA4A5E2B16" http://localhost:8080/Plone/@@jvzoo
+    $ curl -d "ccustname=JohnSmith&ccuststate=&ccustcc=&ccustemail=test@niteoweb.com&cproditem=1&cprodtitle=TestProduct&cprodtype=STANDARD&ctransaction=SALE&ctransaffiliate=affiliate@niteoweb.com&ctransamount=1000&ctranspaymentmethod=&ctransvendor=&ctransreceipt=1&cupsellreceipt=&caffitid=&cvendthru=&cverify=1EC4B66A&ctranstime=1350388651" http://localhost:8080/Plone/@@jvzoo
