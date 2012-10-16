@@ -121,10 +121,9 @@ order for the purchase link to work, the product needs to be activated in
 Before you finish the transaction, you of course need to set up your Plone
 site to receive JVZoo server notifications.
 
-Confirm by logging-in to `JVZoo <http://jvzoo.eu>`_ and checking to
-see if there were any purchases (on ``Sellers`` tab). Also check if your
-received an email with username and password for accessing your site and try to
-login with them.
+Confirm by logging-in to http://jvzoo.com and checking to see if there were any
+purchases (on ``Sellers`` tab). Also check if your received an email with
+username and password for accessing your site and try to login with them.
 
 
 Known issues
