@@ -75,7 +75,7 @@ class JVZooView(BrowserView):
             raise SecretKeyNotSet('JVZoo secret-key is not set!')
         strparams = ""
         for key in iter(sorted(params.iterkeys())):
-            if key == 'cverify':
+            if key in ['cverify', 'secretkey', 'ctranstime']:
                 continue
             strparams += params[key] + "|"
         strparams += params['secretkey']

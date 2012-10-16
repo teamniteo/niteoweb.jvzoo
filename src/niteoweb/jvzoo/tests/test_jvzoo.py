@@ -56,11 +56,11 @@ class TestJVZoo(IntegrationTestCase):
 
         # test
         html = self.view()
-        self.assertEqual(html, "POST parameter missing: u'acquirer_transaction_id'")
-        self.assertEqual(logger.error[0][:72], "POST parameter missing: u'acquirer_transaction_id'")
+        self.assertEqual(html, "POST parameter missing: 'cverify'")
+        self.assertEqual(logger.error[0][:72], "POST parameter missing: 'cverify'")
 
     def test_call_with_missing_secret_key(self):
-        """Test @@jvzoo's response when C2S secret-key is not set."""
+        """Test @@jvzoo's response when JVZoo secret-key is not set."""
 
         # put something into self.request.form so it's not empty
         self.portal.REQUEST.form = dict(foo='bar')
@@ -69,8 +69,8 @@ class TestJVZoo(IntegrationTestCase):
 
         # test
         html = self.view()
-        self.assertEqual(html, "POST handling failed: C2S secret-key is not set!")
-        self.assertEqual(logger.error[0], "POST handling failed: C2S secret-key is not set!")
+        self.assertEqual(html, "POST handling failed: JVZoo secret-key is not set!")
+        self.assertEqual(logger.error[0], "POST handling failed: JVZoo secret-key is not set!")
 
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
     def test_call_with_invalid_checksum(self, verify_post):
@@ -131,8 +131,9 @@ class TestJVZoo(IntegrationTestCase):
         """Test POST verification process."""
         params = dict(
             secretkey='secret',
-            acquirer_transaction_id='123',
-            checksum='B457E9433F98EF22AA9DD9BA4A5E2B16',
+            ccustname='fullname',
+            ctranstime='1325372400',  # this one has to be ommited from hashing
+            cverify='38CFCDED',
         )
         self.view._verify_POST(params)
         self.assertTrue(True)  # no exceptions were raised, test should pass
@@ -142,63 +143,27 @@ class TestJVZoo(IntegrationTestCase):
         fields.
         """
         params = dict(
-            buyer_name='full',
-            buyer_surname='name',
-            buyer_email='email',
-            c2s_transaction_id='last_purchase_id',
-            product_id='product_id',
-            product_name='product_name',
-            affiliate_username='affiliate',
-            purchase_date='2010-01-01',
-            purchase_time='00:00:00',
+            ccustname='fullname',
+            ccustemail='email',
+            ctransreceipt='last_purchase_id',
+            cproditem='product_id',
+            cprodtitle='product_name',
+            ctransaffiliate='affiliate',
+            ctranstime='1325372400',
         )
 
         expected = dict(
-            fullname=u'full name',
+            fullname=u'fullname',
             username='email',
             email='email',
             product_id='product_id',
             product_name='product_name',
             affiliate='affiliate',
             last_purchase_id='last_purchase_id',
-            last_purchase_timestamp=DateTime('2010-01-01 00:00:00'),
+            last_purchase_timestamp=DateTime('2012-01-01 00:00:00 GMT+1'),
         )
 
         result = self.view._parse_POST(params)
-        self.assertEqual(result, expected)
-
-    def test_parse_POST_with_umlaut(self):
-        """Test that POST parameters are correctly mirrored into member
-        fields.
-        """
-        params = dict(
-            buyer_name='füll',
-            buyer_surname='name',
-            buyer_email='email',
-            c2s_transaction_id='last_purchase_id',
-            product_id='product_id',
-            product_name='product_name',
-            affiliate_username='affiliate',
-            purchase_date='2010-01-01',
-            purchase_time='00:00:00',
-        )
-
-        expected = dict(
-            fullname=u'füll name',
-            username='email',
-            email='email',
-            product_id='product_id',
-            product_name='product_name',
-            affiliate='affiliate',
-            last_purchase_id='last_purchase_id',
-            last_purchase_timestamp=DateTime('2010-01-01 00:00:00'),
-        )
-
-        try:
-            result = self.view._parse_POST(params)
-        except:
-            self.fail("UnicodeDecodeError in params")
-
         self.assertEqual(result, expected)
 
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
@@ -355,14 +320,15 @@ class TestJVZoo(IntegrationTestCase):
         """Test that member is added to a product group."""
         # first, let's test what happens if product_id is not found
         self.view._add_to_product_group(TEST_USER_NAME, '666')
-        logger.error.assert_called_with("Product_id 666 does not have a" \
-            " group assigned.")
+        logger.error.assert_called_with(
+            "Product_id 666 does not have a group assigned.")
 
         # next, let's test what happens if group for product_id is not found
         self.settings.mapping = ["13|foo-members"]
         self.view._add_to_product_group(TEST_USER_NAME, '13')
-        logger.error.assert_called_with("Cannot add a member (test-user) to a" \
-            " group, because group does not exist: 'foo-members'")
+        logger.error.assert_called_with(
+            "Cannot add a member (test-user) to a group, because group "
+            "does not exist: 'foo-members'")
 
         # now let's add a member to a group and test that nothing happens when
         # @@jvzoo want's to add a member to this group again

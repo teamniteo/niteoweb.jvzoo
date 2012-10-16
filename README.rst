@@ -30,7 +30,7 @@ How it works
         JVZoo's `Product Name` of the purchased item.
 
     ``affiliate``
-        Affiliate ID of who referred the buyer.
+        Affiliate who referred the buyer.
 
     ``last_purchase_id``
         JVZoo's `Receipt ID` of the last purchase. This field gets updated
