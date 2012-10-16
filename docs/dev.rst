@@ -4,6 +4,12 @@
 Tips & Tricks
 =============
 
+JVZoo IPN API documentation
+===========================
+
+Available at http://support.jvzoo.com/Knowledgebase/Article/View/17/0/jvzipn.
+
+
 Mocked request
 ==============
 

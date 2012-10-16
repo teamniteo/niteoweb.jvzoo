@@ -25,14 +25,15 @@ class TestInstall(IntegrationTestCase):
 
     def test_product_installed(self):
         """Test if niteoweb.jvzoo is installed with portal_quickinstaller."""
-        self.failUnless(self.installer.isProductInstalled('niteoweb.jvzoo'))
+        self.assertTrue(self.installer.isProductInstalled('niteoweb.jvzoo'))
 
     def test_disable_registration_for_anonymous(self):
         """Test if anonymous visitors are prevented to register to the site."""
         # The API of the permissionsOfRole() function sucks - it is bound too
         # closely up in the permission management screen's user interface
-        self.failIf('Add portal member' in [r['name'] for r in
-                                self.portal.permissionsOfRole('Anonymous') if r['selected']])
+        self.assertFalse(
+            'Add portal member' in [r['name'] for r in
+            self.portal.permissionsOfRole('Anonymous') if r['selected']])
 
     def test_jvzoo_fields_added(self):
         """Test if jvzoo-specific fields were added to memberdata."""
@@ -46,14 +47,14 @@ class TestInstall(IntegrationTestCase):
     def test_use_email_as_login(self):
         """Test if email is indeed used as username."""
         site_properties = self.portal.portal_properties.site_properties
-        self.failUnless(site_properties.getProperty('use_email_as_login') == True)
+        self.assertTrue(site_properties.getProperty('use_email_as_login'))
 
     def test_jvzoo_controlpanel_available(self):
         """Test if jvzoo control panel configlet is available."""
         view = getMultiAdapter((self.portal, self.portal.REQUEST),
                                name="jvzoo-settings")
         view = view.__of__(self.portal)
-        self.failUnless(view())
+        self.assertTrue(view())
 
     def test_jvzoo_controlpanel_view_protected(self):
         """Check that access to jvzoo settings is restricted."""

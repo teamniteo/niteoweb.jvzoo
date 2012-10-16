@@ -18,20 +18,22 @@ class IJVZooSettings(Interface):
 
     secretkey = schema.Password(
         title=_(u"JVZoo Secret Key"),
-        description=_(u"help_secretkey",
-            default=u"Enter the Secret Key you got from JVZoo to access " \
-                     "their API."),
+        description=_(
+            u"help_secretkey",
+            default=u"Enter the Secret Key you got from JVZoo to access "
+                    "their API."),
         required=True,
     )
 
     mapping = schema.List(
         title=_(u"Product ID to Group mapping"),
-        description=_(u"help_secretkey",
-            default=u"Optionally, you can set Product ID to Group mapping. " \
-            "This is used to automatically add a new member to a certain " \
-            "group based on which JVZoo product was purchased. Format: " \
-            "'PRODUCT_ID|GROUP_ID'. Example: '1|premium_members'. One " \
-            "mapping per line."),
+        description=_(
+            u"help_secretkey",
+            default=u"Optionally, you can set Product ID to Group mapping. "
+                    "This is used to automatically add a new member to a "
+                    "group based on which JVZoo product was purchased. Format: "
+                    "'PRODUCT_ID|GROUP_ID'. Example: '1|premium_members'. "
+                    "One mapping per line."),
         required=False,
         value_type=schema.ASCIILine(),
         constraint=parse_mapping,
