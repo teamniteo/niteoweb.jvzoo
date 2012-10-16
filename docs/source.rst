@@ -17,9 +17,6 @@ Source
 .. automodule:: niteoweb.jvzoo.browser.controlpanel
     :members:
 
-.. automodule:: niteoweb.jvzoo.upgrades.upgrade_0_to_0400
-    :members:
-
 
 Tests
 =====

@@ -158,4 +158,4 @@ displayed:
 
 Documentation is automatically generated from these source files every time
 you push your code to GitHub. The post-commit hook is handled by ReadTheDocs and
-the results are visible at http://readthedocs.org/docs/niteowebclick2sel.
+the results are visible at http://readthedocs.org/docs/niteowebjvzoo.

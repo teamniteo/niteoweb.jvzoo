@@ -17,7 +17,7 @@ long_description = \
 
 setup(
     name='niteoweb.jvzoo',
-    version='1.0',
+    version='0.1',
     description="Integrates JVZoo digital products retailer system with "
                 "Plone for paid memberships.",
     long_description=long_description,
