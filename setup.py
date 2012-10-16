@@ -10,21 +10,22 @@ import os
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-version = read('src', 'niteoweb', 'click2sell', 'version.txt').strip()
+long_description = \
+    read('README.rst') + \
+    read('docs', 'HISTORY.rst') + \
+    read('docs', 'LICENSE.rst')
 
 setup(
-    name='niteoweb.click2sell',
-    version=version,
-    description="Integrates click2sell digital products retailer system with " \
-        "Plone for paid memberships.",
-    long_description=read('README.rst') +
-                     read('docs', 'HISTORY.rst') +
-                     read('docs', 'LICENSE.rst'),
+    name='niteoweb.jvzoo',
+    version='1.0',
+    description="Integrates JVZoo digital products retailer system with "
+                "Plone for paid memberships.",
+    long_description=long_description,
     classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
     ],
-    keywords='Plone Python click2sell',
+    keywords='Plone Python JVZoo',
     author='NiteoWeb Ltd.',
     author_email='info@niteoweb.com',
     url='http://www.niteoweb.com',
@@ -43,7 +44,6 @@ setup(
         'test': [
             'mock',
             'plone.app.testing',
-            'Products.PloneTestCase',
             'repoze.sphinx.autointerface',  # this is not really used in tests
             'unittest2',
         ],
