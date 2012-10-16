@@ -72,9 +72,15 @@ class JVZooView(BrowserView):
 
         """
         if not params['secretkey']:
-            raise SecretKeyNotSet('C2S secret-key is not set!')
-        request_data = "%(secretkey)s_%(acquirer_transaction_id)s" % params
-        assert params['checksum'] == hashlib.md5(request_data).hexdigest().upper(), 'Checksum verification failed.'
+            raise SecretKeyNotSet('JVZoo secret-key is not set!')
+        strparams = ""
+        for key in iter(sorted(params.iterkeys())):
+            if key == 'cverify':
+                continue
+            strparams += params[key] + "|"
+        strparams += params['secretkey']
+        sha = hashlib.sha1(strparams.encode('utf-8')).hexdigest().upper()
+        assert params['cverify'] == sha[:8], 'Checksum verification failed.'
 
     def _parse_POST(self, params):
         """Parses POST from JVZoo and extracts information we need.
@@ -84,16 +90,14 @@ class JVZooView(BrowserView):
 
         """
         return {
-            'username': params['buyer_email'],
-            'email': params['buyer_email'],
-            'fullname': u"%s %s" % (
-                params['buyer_name'].decode("utf-8"),
-                params['buyer_surname'].decode("utf-8")
-            ),
-            'product_id': params['product_id'],
-            'product_name': params['product_name'],
-            'affiliate': params['affiliate_username'],
-            'last_purchase_id': params['c2s_transaction_id'],
+            'username': params['ccustemail'],
+            'email': params['ccustemail'],
+            'fullname': u"%s" % params['ccustname'].decode("utf-8"),
+            'product_id': params['cproditem'],
+            'product_name': params['cprodtitle'],
+            'affiliate': params['ctransaffiliate'],
+            'last_purchase_id': params['ctransreceipt'],
+            # TODO: ctranstime
             'last_purchase_timestamp': DateTime("%s %s" % (params['purchase_date'], params['purchase_time'])),
         }
 
@@ -160,19 +164,20 @@ class JVZooView(BrowserView):
         try:
             mapping = parse_mapping(settings.mapping)
         except Invalid:
-            logger.error("Due to problems with parsing product_id to group " \
-                "mapping, the member '%s' was not added to group." % username)
+            logger.error("Due to problems with parsing product_id to group "
+                         "mapping, the member '%s' was not added to group."
+                         % username)
             return
 
         group_name = mapping.get(product_id)
         if not group_name:
             logger.error("Product_id %s does not have a group assigned."
-                % product_id)
+                         % product_id)
             return
 
         if group_name not in groups.getGroupIds():
-            logger.error("Cannot add a member (%s) to a group, because group " \
-                "does not exist: '%s'" % (username, group_name))
+            logger.error("Cannot add a member (%s) to a group, because group "
+                         "does not exist: '%s'" % (username, group_name))
             return
 
         groups.addPrincipalToGroup(username, group_name)
@@ -207,7 +212,7 @@ class JVZooView(BrowserView):
             login_url=self.context.absolute_url() + '/login_form',
             email_from=envelope_from,
             portal_title=portal_title,
-       )
+        )
         body = ViewPageTemplateFile("email.pt")(self, **options)
 
         # send email
