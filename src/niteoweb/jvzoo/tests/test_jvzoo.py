@@ -132,7 +132,6 @@ class TestJVZoo(IntegrationTestCase):
         params = dict(
             secretkey='secret',
             ccustname='fullname',
-            ctranstime='1325372400',  # this one has to be ommited from hashing
             cverify='38CFCDED',
         )
         self.view._verify_POST(params)
