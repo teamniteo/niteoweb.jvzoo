@@ -77,9 +77,9 @@ class JVZooView(BrowserView):
         assert params['checksum'] == hashlib.md5(request_data).hexdigest().upper(), 'Checksum verification failed.'
 
     def _parse_POST(self, params):
-        """Parses POST from Click2Sell and extracts information we need.
+        """Parses POST from JVZoo and extracts information we need.
 
-        :param params: POST parameters sent by Click2Sell Notification Service
+        :param params: POST parameters sent by JVZoo Notification Service
         :type params: dict
 
         """
@@ -105,7 +105,7 @@ class JVZooView(BrowserView):
 
         In case the member already exists, this method updates member's fields.
         Besides that, if `Product ID to group mapping` configuration in
-        Click2Sell control panel is set, it also adds the member to the
+        JVZoo control panel is set, it also adds the member to the
         respective group.
 
         :param username: username of member that is to be created/updated
@@ -133,9 +133,9 @@ class JVZooView(BrowserView):
             notify(MemberCreatedEvent(self, username))
             self._email_password(username, password, data)
 
-        # create default click2sell group and add member to it
+        # create default jvzoo group and add member to it
         groups = getToolByName(self.context, 'portal_groups')
-        group_name = "click2sell"
+        group_name = "jvzoo"
         if group_name not in groups.getGroupIds():
             groups.addGroup(group_name)
         groups.addPrincipalToGroup(username, group_name)
@@ -155,7 +155,7 @@ class JVZooView(BrowserView):
 
         groups = getToolByName(self.context, 'portal_groups')
         registry = getUtility(IRegistry)
-        settings = registry.forInterface(IClick2SellSettings)
+        settings = registry.forInterface(IJVZooSettings)
 
         try:
             mapping = parse_mapping(settings.mapping)

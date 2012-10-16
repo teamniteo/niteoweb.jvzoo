@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# niteoweb.click2sell documentation build configuration file, created by
+# niteoweb.jvzoo documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb  8 19:10:04 2010.
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 from datetime import datetime
-project = u'niteoweb.click2sell'
+project = u'niteoweb.jvzoo'
 copyright = u'%s, NiteoWeb Ltd.' % datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
@@ -157,7 +157,7 @@ html_static_path = ['_static']
 #html_file_suffix = ''
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'niteowebclick2selldoc'
+htmlhelp_basename = 'niteowebjvzoodoc'
 
 
 # -- Options for LaTeX output -------------------------------------------------
@@ -172,8 +172,8 @@ htmlhelp_basename = 'niteowebclick2selldoc'
 # (source start file, target name, title, author, documentclass [howto/manual])
 latex_documents = [
   ('index',
-   'niteowebclick2sell.tex',
-  u'niteoweb.click2sell Documentation',
+   'niteowebjvzoo.tex',
+  u'niteoweb.jvzoo Documentation',
   u'', 'manual'
   ),
 ]

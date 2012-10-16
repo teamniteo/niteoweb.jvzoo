@@ -1,5 +1,5 @@
 =========================
- click2sell control panel
+ jvzoo control panel
 =========================
 
 These tests are adapted from that in plone.app.controlpanel
@@ -13,8 +13,8 @@ First some initial setup code.
     >>> from plone.registry.interfaces import IRegistry
     >>> registry = getUtility(IRegistry)
 
-    >>> from niteoweb.click2sell.interfaces import IClick2SellSettings
-    >>> settings = registry.forInterface(IClick2SellSettings)
+    >>> from niteoweb.jvzoo.interfaces import IJVZooSettings
+    >>> settings = registry.forInterface(IJVZooSettings)
 
 Login as test user.
 
@@ -23,22 +23,22 @@ Login as test user.
     >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.addHeader('Authorization', 'Basic %s:%s' % (TEST_USER_NAME, TEST_USER_PASSWORD,))
 
-Set Click2Sell SecretKey.
+Set JVZoo SecretKey.
 
     >>> settings.secretkey = u'secret'
 
 
-Viewing the click2sell control panel
+Viewing the jvzoo control panel
 -----------------------------------------------
 
-    >>> browser.open('http://nohost/plone/@@click2sell-settings')
+    >>> browser.open('http://nohost/plone/@@jvzoo-settings')
     >>> browser.url
-    'http://nohost/plone/@@click2sell-settings'
+    'http://nohost/plone/@@jvzoo-settings'
 
 Click the save button without making any changes:
 
     >>> browser.getControl(name="form.buttons.save").click()
-    >>> browser.url.endswith('click2sell-settings')
+    >>> browser.url.endswith('jvzoo-settings')
     True
 
 We should get a status message:
@@ -62,8 +62,8 @@ There should be still no changes:
 Make some changes
 -----------------
 
-    >>> browser.open('http://nohost/plone/@@click2sell-settings')
-    >>> browser.url.endswith('click2sell-settings')
+    >>> browser.open('http://nohost/plone/@@jvzoo-settings')
+    >>> browser.url.endswith('jvzoo-settings')
     True
 
     >>> browser.getControl(name='form.widgets.secretkey').value = 'new secret'

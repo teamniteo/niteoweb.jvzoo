@@ -26,7 +26,7 @@ Changelog
 - More verbose POST error handling.
   [zupo]
 
-- Revert making click2sell key non-required so we can edit the mapping without
+- Revert making jvzoo key non-required so we can edit the mapping without
   always supplying the key.
   [zupo]
 
@@ -34,8 +34,8 @@ Changelog
 0.4.2 (2012-04-29)
 ------------------
 
-- Made ``click2sell key`` non-required so we can modify the product_id to
-  group_name mapping without always supplying the ``click2sell key``.
+- Made ``jvzoo key`` non-required so we can modify the product_id to
+  group_name mapping without always supplying the ``jvzoo key``.
   [zupo]
 
 - Even more work on groups edge-cases.

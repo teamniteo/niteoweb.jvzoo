@@ -5,32 +5,32 @@ Source documentation
 Source
 ======
 
-.. automodule:: niteoweb.click2sell.interfaces
+.. automodule:: niteoweb.jvzoo.interfaces
     :members:
 
-.. autointerface:: niteoweb.click2sell.interfaces.IClick2SellSettings
+.. autointerface:: niteoweb.jvzoo.interfaces.IJVZooSettings
 
-.. automodule:: niteoweb.click2sell.browser.click2sell
+.. automodule:: niteoweb.jvzoo.browser.jvzoo
     :members:
     :private-members:
 
-.. automodule:: niteoweb.click2sell.browser.controlpanel
+.. automodule:: niteoweb.jvzoo.browser.controlpanel
     :members:
 
-.. automodule:: niteoweb.click2sell.upgrades.upgrade_0_to_0400
+.. automodule:: niteoweb.jvzoo.upgrades.upgrade_0_to_0400
     :members:
 
 
 Tests
 =====
 
-.. automodule:: niteoweb.click2sell.tests.base
+.. automodule:: niteoweb.jvzoo.tests.base
     :members:
 
-.. automodule:: niteoweb.click2sell.tests.test_setup
+.. automodule:: niteoweb.jvzoo.tests.test_setup
     :members:
     :exclude-members: test_suite
 
-.. automodule:: niteoweb.click2sell.tests.test_click2sell
+.. automodule:: niteoweb.jvzoo.tests.test_jvzoo
     :members:
     :exclude-members: test_suite

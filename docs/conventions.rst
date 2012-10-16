@@ -100,7 +100,7 @@ You run tests like this:
 
 .. sourcecode:: bash
 
-    $ bin/test -s niteoweb.click2sell
+    $ bin/test -s niteoweb.jvzoo
 
 
 .. _syntax-validation:
@@ -115,9 +115,9 @@ To validate your source code, run the following two commands:
 
 .. sourcecode:: bash
 
-    $ bin/pyflakes src/niteoweb/click2sell
-    $ bin/pep8 --ignore=E501 src/niteoweb/click2sell
-    $ for pt in `find src/niteoweb/click2sell/ -name "*.pt"` ; do bin/zptlint $pt; done
+    $ bin/pyflakes src/niteoweb/jvzoo
+    $ bin/pep8 --ignore=E501 src/niteoweb/jvzoo
+    $ for pt in `find src/niteoweb/jvzoo/ -name "*.pt"` ; do bin/zptlint $pt; done
 
 .. note::
     It pays off to invest a little time to make your editor run `pep8` and

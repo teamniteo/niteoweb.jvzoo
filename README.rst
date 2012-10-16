@@ -115,9 +115,9 @@ Test it
 TODO: how to test
 You are now ready to do a test buy! Go back to ``Sellers`` and click
 ``Test BUY``. Before you finish the transaction, you need to set up your Plone
-site to receive Click2Sell server notifications.
+site to receive JVZoo server notifications.
 
-Confirm by logging-in to `Click2Sell <http://click2sell.eu>`_ and checking to
+Confirm by logging-in to `JVZoo <http://jvzoo.eu>`_ and checking to
 see if there were any purchases. Also check if your receive an email with
 username and password for accessing your site and try to login with them.
 
