@@ -9,6 +9,7 @@ from niteoweb.jvzoo import parse_mapping
 from niteoweb.jvzoo.interfaces import SecretKeyNotSet
 from niteoweb.jvzoo.interfaces import IJVZooSettings
 from niteoweb.jvzoo.interfaces import MemberCreatedEvent
+from plone import api
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
@@ -44,7 +45,10 @@ class JVZooView(BrowserView):
             # verify and parse post
             self._verify_POST(params)
             data = self._parse_POST(params)
-            self.create_or_update_member(data['username'], data)
+            if data['transaction_type'] == 'CANCEL-REBILL':
+                self.auto_cancel_user(data['username'], data)
+            else:
+                self.create_or_update_member(data['username'], data)
 
         # something went wrong?
         except KeyError as ex:
@@ -101,7 +105,28 @@ class JVZooView(BrowserView):
                 int(params['ctranstime']),
                 datefmt='epoch'
             ),
+            'transaction_type': params['ctransaction'],
         }
+
+    def auto_cancel_user(self, username, data):
+        user = api.user.get(username=username)
+
+        # Revoke user from 'Member' role
+        revoke_role = 'Member'
+        if revoke_role in api.user.get_roles(user=user):
+            api.user.revoke_roles(user=user, roles=[revoke_role])
+
+        # Get or create autocanceled group
+        autocancel_group = api.group.get('autocanceled')
+        if autocancel_group is None:
+            autocancel_group = api.group.create(
+                groupname='autocanceled',
+                title="Auto-canceled",
+                description="Auto canceled users group."
+            )
+
+        # Add user to autocanceled group
+        api.group.add_user(user=user, group=autocancel_group)
 
     def create_or_update_member(self, username, data):
         """Creates or updates a Plone member.
