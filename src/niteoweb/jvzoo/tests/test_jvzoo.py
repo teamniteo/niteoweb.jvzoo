@@ -115,7 +115,10 @@ class TestJVZoo(IntegrationTestCase):
 
         # mock post handling
         verify_post.return_value = True
-        parse_post.return_value = dict(username='username')
+        parse_post.return_value = dict(
+            username='username',
+            transaction_type='SALE'
+        )
         create_or_update_member.return_value = True
 
         # test
@@ -149,6 +152,7 @@ class TestJVZoo(IntegrationTestCase):
             cprodtitle='product_name',
             ctransaffiliate='affiliate',
             ctranstime='1325372400',
+            ctransaction='SALE',
         )
 
         expected = dict(
@@ -160,6 +164,7 @@ class TestJVZoo(IntegrationTestCase):
             affiliate='affiliate',
             last_purchase_id='last_purchase_id',
             last_purchase_timestamp=DateTime('2012-01-01 00:00:00 GMT+1'),
+            transaction_type='SALE',
         )
 
         result = self.view._parse_POST(params)
