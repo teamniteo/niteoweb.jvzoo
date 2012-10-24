@@ -38,6 +38,7 @@ setup(
     install_requires=[
         'setuptools',
         'plone.app.registry',
+        'plone.api',
     ],
     extras_require={
         # list libs needed for unittesting this project
