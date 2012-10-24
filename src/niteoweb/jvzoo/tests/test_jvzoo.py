@@ -8,6 +8,7 @@ from DateTime import DateTime
 from niteoweb.jvzoo.interfaces import IJVZooSettings
 from niteoweb.jvzoo.tests.base import IntegrationTestCase
 from niteoweb.jvzoo.tests.base import MockedLoggingHandler as logger
+from plone import api
 from plone.app.testing import TEST_USER_NAME
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
@@ -231,6 +232,45 @@ class TestJVZoo(IntegrationTestCase):
         self.assertEqual(member.getProperty('last_purchase_id'), 'invoice_2')
         self.assertEqual(member.getProperty('last_purchase_timestamp'), DateTime('2010/02/02'))
         self.assertIn('premium-members', member.getGroups())
+
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
+    def test_auto_cancel_member(self, generate_password):
+        """Test creating a new member out of POST parameters."""
+        generate_password.return_value = 'secret123'
+
+        test_data = dict(
+            username='john@smith.name',
+            password='secret123',
+            email='john@smith.name',
+            fullname='John Smith',
+            product_id='1',
+            product_name='product_name',
+            affiliate='Jane Affiliate',
+            last_purchase_id='invoice_1',
+            last_purchase_timestamp=DateTime('2010/01/01'),
+        )
+
+        # run method
+        self.view.create_or_update_member(test_data['username'], test_data)
+
+        # get member
+        member = self.membership.getMemberById(test_data['username'])
+
+        # Check if user has Member role
+        self.assertIn('Member', api.user.get_roles(user=member.getUser()))
+
+        # Call cancel user method
+        self.view.auto_cancel_user(test_data['username'], test_data)
+
+        # Now check if user does not have Member role
+        self.assertNotIn('Member', api.user.get_roles(user=member.getUser()))
+
+        # Check for autocanceled group
+        autocanceled_group = api.group.get('autocanceled')
+        self.assertIsNotNone(autocanceled_group)
+
+        # Check if user is in autocanceled group
+        self.assertIn(autocanceled_group, api.group.get_groups(user=member.getUser()))
 
     def test_update_member(self):
         """Test updating an existing member with POST parameters."""
