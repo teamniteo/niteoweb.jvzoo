@@ -19,7 +19,7 @@ Before every release make sure that:
 
 #. You have documented your changes in the ``HISTORY.rst`` file.
 
-#. You have modified the version identifier in the ``version.txt`` to reflect
+#. You have modified the version identifier in the ``setup.py`` to reflect
    the new release.
 
 #. You have confirmed that the package description (generated from
