@@ -126,6 +126,72 @@ class TestJVZoo(IntegrationTestCase):
         html = self.view()
         self.assertIn('POST successfully parsed.', html)
 
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._parse_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.create_or_update_member')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.auto_cancel_user')
+    def test_call_with_CANCEL(
+            self,
+            auto_cancel_user,
+            create_or_update_member,
+            parse_post,
+            verify_post
+    ):
+        """Test @@jvzoo's response when POST is valid."""
+
+        # put something into self.request.form so it's not empty
+        self.portal.REQUEST.form = dict(value='non empty value')
+
+        # mock post handling
+        verify_post.return_value = True
+        parse_post.return_value = dict(
+            username='username',
+            transaction_type='CANCEL-REBILL'
+        )
+
+        # test
+        html = self.view()
+        self.assertIn('POST successfully parsed.', html)
+
+        # test if method was called
+        self.assertEqual(auto_cancel_user.call_count, 1)
+
+        # test if method was NOT called
+        self.assertEqual(create_or_update_member.call_count, 0)
+
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._parse_POST')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.create_or_update_member')
+    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.auto_cancel_user')
+    def test_call_with_RFND(
+            self,
+            auto_cancel_user,
+            create_or_update_member,
+            parse_post,
+            verify_post
+    ):
+        """Test @@jvzoo's response when POST is valid."""
+
+        # put something into self.request.form so it's not empty
+        self.portal.REQUEST.form = dict(value='non empty value')
+
+        # mock post handling
+        verify_post.return_value = True
+        parse_post.return_value = dict(
+            username='username',
+            transaction_type='RFND'
+        )
+
+        # test
+        html = self.view()
+        self.assertIn('POST successfully parsed.', html)
+
+        # test if method was called
+        self.assertEqual(auto_cancel_user.call_count, 1)
+
+        # test if method was NOT called
+        self.assertEqual(create_or_update_member.call_count, 0)
+
     def test_generate_password(self):
         """Test password generation."""
         password = self.view._generate_password(8)
