@@ -237,6 +237,45 @@ class TestJVZoo(IntegrationTestCase):
         result = self.view._parse_POST(params)
         self.assertEqual(result, expected)
 
+    @mock.patch("time.time")
+    def test_parse_POST_empty_time(self, time):
+        """Test that POST parameters are correctly mirrored into member
+        fields.
+        """
+        params = dict(
+            ccustname='fullname',
+            ccustemail='email',
+            ctransreceipt='last_purchase_id',
+            cproditem='product_id',
+            cprodtitle='product_name',
+            ctransaffiliate='affiliate',
+            ctranstime='',
+            ctransaction='RFND',
+        )
+
+        expected = dict(
+            fullname=u'fullname',
+            username='email',
+            email='email',
+            product_id='product_id',
+            product_name='product_name',
+            affiliate='affiliate',
+            last_purchase_id='last_purchase_id',
+            last_purchase_timestamp=DateTime('2012-01-01 00:00:00 GMT+1'),
+            transaction_type='RFND',
+        )
+
+        time.return_value = 1325372400
+
+        try:
+            result = self.view._parse_POST(params)
+            self.assertEqual(result, expected)
+        except ValueError as ex:
+            if str(ex) == "invalid literal for int() with base 10: ''":
+                self.fail("ctranstime is empty string: {0}".format(ex))
+            else:
+                raise
+
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
     def test_create_member(self, generate_password):
         """Test creating a new member out of POST parameters."""
