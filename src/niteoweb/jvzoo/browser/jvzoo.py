@@ -273,9 +273,6 @@ class JVZooView(BrowserView):
         )
         body = ViewPageTemplateFile("cancel_email.pt")(self, **options)
 
-        with open("/tmp/madafaka.html", "w") as f:  # TODO: remove
-            f.write(body)
-
         # send email
         mailhost = getToolByName(self.context, 'MailHost')
         mailhost.send(
