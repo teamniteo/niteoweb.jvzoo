@@ -127,6 +127,7 @@ class JVZooView(BrowserView):
 
         # Add user to autocanceled group
         api.group.add_user(user=user, group=autocancel_group)
+        self._cancel_email(user.getUser())
 
     def create_or_update_member(self, username, data):
         """Creates or updates a Plone member.
@@ -245,6 +246,45 @@ class JVZooView(BrowserView):
         # send email
         mailhost = getToolByName(self.context, 'MailHost')
         mailhost.send(body, mto=mto, mfrom=envelope_from, subject=subject, charset='utf-8')
+
+    def _cancel_email(self, user):
+        """Send an notification message to
+        site support email address when user cancels.
+        """
+        portal_title = self.context.title
+
+        # email from address
+        envelope_from = self.context.email_from_address
+
+        # email subject
+        subject = u"{0} Cancelation - [{1}]".format(
+            portal_title,
+            user.getUserName()
+        )
+
+        # email body text
+        options = dict(
+            fullname=user.getProperty('fullname'),
+            username=user.getUserName(),
+            groups=user.getGroups(),
+            roles=user.getRoles(),
+            email_from=envelope_from,
+            portal_title=portal_title,
+        )
+        body = ViewPageTemplateFile("cancel_email.pt")(self, **options)
+
+        with open("/tmp/madafaka.html", "w") as f:  # TODO: remove
+            f.write(body)
+
+        # send email
+        mailhost = getToolByName(self.context, 'MailHost')
+        mailhost.send(
+            body,
+            mto=envelope_from,
+            mfrom=envelope_from,
+            subject=subject,
+            charset='utf-8'
+        )
 
     def _generate_password(self, length=8, include=string.letters + string.digits):
         """Generate random password in base64.
