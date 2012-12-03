@@ -58,7 +58,9 @@ class TestJVZoo(IntegrationTestCase):
         # test
         html = self.view()
         self.assertEqual(html, "POST parameter missing: 'cverify'")
-        self.assertEqual(logger.error[0][:72], "POST parameter missing: 'cverify'")
+        self.assertEqual(
+            logger.error[0][:72], "POST parameter missing: 'cverify'"
+        )
 
     def test_call_with_missing_secret_key(self):
         """Test @@jvzoo's response when JVZoo secret-key is not set."""
@@ -70,8 +72,13 @@ class TestJVZoo(IntegrationTestCase):
 
         # test
         html = self.view()
-        self.assertEqual(html, "POST handling failed: JVZoo secret-key is not set!")
-        self.assertEqual(logger.error[0], "POST handling failed: JVZoo secret-key is not set!")
+        self.assertEqual(
+            html, "POST handling failed: JVZoo secret-key is not set!"
+        )
+        self.assertEqual(
+            logger.error[0],
+            "POST handling failed: JVZoo secret-key is not set!"
+        )
 
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
     def test_call_with_invalid_checksum(self, verify_post):
@@ -103,12 +110,21 @@ class TestJVZoo(IntegrationTestCase):
         # test
         html = self.view()
         self.assertEqual(html, 'POST handling failed: Internal foo.')
-        self.assertEqual(logger.error[0], "POST handling failed: Internal foo.")
+        self.assertEqual(
+            logger.error[0], "POST handling failed: Internal foo."
+        )
 
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._verify_POST')
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._parse_POST')
-    @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView.create_or_update_member')
-    def test_call_with_valid_POST(self, create_or_update_member, parse_post, verify_post):
+    @mock.patch(
+        'niteoweb.jvzoo.browser.jvzoo.JVZooView.create_or_update_member'
+    )
+    def test_call_with_valid_POST(
+        self,
+        create_or_update_member,
+        parse_post,
+        verify_post
+    ):
         """Test @@jvzoo's response when POST is valid."""
 
         # put something into self.request.form so it's not empty
@@ -192,20 +208,40 @@ class TestJVZoo(IntegrationTestCase):
         self.view.create_or_update_member(test_data['username'], test_data)
 
         # test member
-        member = self.portal.portal_membership.getMemberById(test_data['username'])
+        member = self.portal.portal_membership.getMemberById(
+            test_data['username']
+        )
         self.assertEqual(member.getProperty('email'), test_data['email'])
         self.assertEqual(member.getProperty('fullname'), test_data['fullname'])
-        self.assertEqual(member.getProperty('product_id'), test_data['product_id'])
-        self.assertEqual(member.getProperty('product_name'), test_data['product_name'])
-        self.assertEqual(member.getProperty('affiliate'), test_data['affiliate'])
-        self.assertEqual(member.getProperty('last_purchase_id'), test_data['last_purchase_id'])
-        self.assertEqual(member.getProperty('last_purchase_timestamp'), test_data['last_purchase_timestamp'])
+        self.assertEqual(
+            member.getProperty('product_id'),
+            test_data['product_id']
+        )
+        self.assertEqual(
+            member.getProperty('product_name'),
+            test_data['product_name']
+        )
+        self.assertEqual(
+            member.getProperty('affiliate'),
+            test_data['affiliate']
+        )
+        self.assertEqual(
+            member.getProperty('last_purchase_id'),
+            test_data['last_purchase_id']
+        )
+        self.assertEqual(
+            member.getProperty('last_purchase_timestamp'),
+            test_data['last_purchase_timestamp']
+        )
 
         # test email
         self.assertEqual(len(self.mailhost.messages), 1)
         msg = self.mailhost.messages[0]
         self.assertIn('To: %(email)s' % test_data, msg)
-        self.assertIn('Subject: =?utf-8?q?Your_Plone_site_login_credentials', msg)
+        self.assertIn(
+            'Subject: =?utf-8?q?Your_Plone_site_login_credentials',
+            msg
+        )
         self.assertIn('u: %(username)s' % test_data, msg)
         self.assertIn('p: %(password)s' % test_data, msg)
 
@@ -230,7 +266,10 @@ class TestJVZoo(IntegrationTestCase):
         member = self.membership.getMemberById(test_data['username'])
         self.assertEqual(member.getProperty('product_id'), '2')
         self.assertEqual(member.getProperty('last_purchase_id'), 'invoice_2')
-        self.assertEqual(member.getProperty('last_purchase_timestamp'), DateTime('2010/02/02'))
+        self.assertEqual(
+            member.getProperty('last_purchase_timestamp'),
+            DateTime('2010/02/02')
+        )
         self.assertIn('premium-members', member.getGroups())
 
     @mock.patch('niteoweb.jvzoo.browser.jvzoo.JVZooView._generate_password')
@@ -270,7 +309,9 @@ class TestJVZoo(IntegrationTestCase):
         self.assertIsNotNone(autocanceled_group)
 
         # Check if user is in autocanceled group
-        self.assertIn(autocanceled_group, api.group.get_groups(user=member.getUser()))
+        self.assertIn(
+            autocanceled_group, api.group.get_groups(user=member.getUser())
+        )
 
     def test_update_member(self):
         """Test updating an existing member with POST parameters."""
@@ -301,8 +342,14 @@ class TestJVZoo(IntegrationTestCase):
 
         # test member
         member = self.portal.acl_users.getUserById(new_data['username'])
-        self.assertEqual(member.getProperty('last_purchase_id'), new_data['last_purchase_id'])
-        self.assertEqual(member.getProperty('last_purchase_timestamp'), new_data['last_purchase_timestamp'])
+        self.assertEqual(
+            member.getProperty('last_purchase_id'),
+            new_data['last_purchase_id']
+        )
+        self.assertEqual(
+            member.getProperty('last_purchase_timestamp'),
+            new_data['last_purchase_timestamp']
+        )
 
         # test that member was added to a new product group
         self.assertIn('premium-members', member.getGroups())
@@ -335,20 +382,40 @@ class TestJVZoo(IntegrationTestCase):
         self.view.create_or_update_member(test_data['username'], test_data)
 
         # test member
-        member = self.portal.portal_membership.getMemberById(test_data['username'])
+        member = self.portal.portal_membership.getMemberById(
+            test_data['username']
+        )
         self.assertEqual(member.getProperty('email'), test_data['email'])
         self.assertEqual(member.getProperty('fullname'), test_data['fullname'])
-        self.assertEqual(member.getProperty('product_id'), test_data['product_id'])
-        self.assertEqual(member.getProperty('product_name'), test_data['product_name'])
-        self.assertEqual(member.getProperty('affiliate'), test_data['affiliate'])
-        self.assertEqual(member.getProperty('last_purchase_id'), test_data['last_purchase_id'])
-        self.assertEqual(member.getProperty('last_purchase_timestamp'), test_data['last_purchase_timestamp'])
+        self.assertEqual(
+            member.getProperty('product_id'),
+            test_data['product_id']
+        )
+        self.assertEqual(
+            member.getProperty('product_name'),
+            test_data['product_name']
+        )
+        self.assertEqual(
+            member.getProperty('affiliate'),
+            test_data['affiliate']
+        )
+        self.assertEqual(
+            member.getProperty('last_purchase_id'),
+            test_data['last_purchase_id']
+        )
+        self.assertEqual(
+            member.getProperty('last_purchase_timestamp'),
+            test_data['last_purchase_timestamp']
+        )
 
         # test email
         self.assertEqual(len(self.mailhost.messages), 1)
         msg = self.mailhost.messages[0]
         self.assertIn('To: %(email)s' % test_data, msg)
-        self.assertIn('Subject: =?utf-8?q?Your_Plone_site_login_credentials', msg)
+        self.assertIn(
+            'Subject: =?utf-8?q?Your_Plone_site_login_credentials',
+            msg
+        )
         self.assertIn('u: %(username)s' % test_data, msg)
         self.assertIn('p: %(password)s' % test_data, msg)
 
@@ -395,7 +462,9 @@ class TestJVZoo(IntegrationTestCase):
         self.portal.email_from_address = "mail@plone.test"
 
         # run method
-        self.view._email_password(test_data['username'], test_data['password'], test_data)
+        self.view._email_password(
+            test_data['username'], test_data['password'], test_data
+        )
 
         # test email
         self.assertEqual(len(self.mailhost.messages), 1)
@@ -404,15 +473,87 @@ class TestJVZoo(IntegrationTestCase):
         # test email headers
         self.failUnless('To: %(email)s' % test_data in msg)
         self.failUnless('From: %s' % self.portal.email_from_address in msg)
-        self.failUnless('Subject: =?utf-8?q?Your_JVZoo_Integration_Site_login_credentials' in msg)
+        self.failUnless(
+            'Subject: =?utf-8?q?Your_JVZoo_Integration'
+            '_Site_login_credentials' in msg
+        )
 
         # test email body text
         self.failUnless('Hello %(fullname)s,' % test_data in msg)
         self.failUnless('u: %(username)s' % test_data in msg)
         self.failUnless('p: %(password)s' % test_data in msg)
-        self.failUnless('You can now login at http://nohost/plone/login_form'in msg)
-        self.failUnless('let us know on %s' % self.portal.email_from_address in msg)
+        self.failUnless(
+            'You can now login at http://nohost/plone/login_form'in msg
+        )
+        self.failUnless(
+            'let us know on %s' % self.portal.email_from_address in msg
+        )
         self.failUnless('Best wishes,\n%s Team' % self.portal.title in msg)
+
+    def test_cancel_email(self):
+        """Test headers and text of email that is sent to 'from' address
+        when user is auto-canceled."""
+
+        test_data = dict(
+            username='john@smith.name',
+            password='secret123',
+            email='john@smith.name',
+            properties={
+                'fullname': 'John Smith'
+            }
+        )
+
+        test_user = api.user.create(
+            username=test_data['username'],
+            email=test_data['email'],
+            password=test_data['password'],
+            properties=test_data['properties']
+        )
+
+        # set portal properties
+        self.portal.title = u'JVZoo Integration Site'
+        self.portal.email_from_address = "mail@plone.test"
+
+        # run method
+        self.view._cancel_email(test_user)
+
+        # test email
+        self.assertEqual(len(self.mailhost.messages), 1)
+        msg = self.mailhost.messages[0]
+
+        with open('/tmp/madafaka.txt', 'w') as f:
+            f.write(msg)
+
+        # test subject
+        self.assertIn(
+            "Subject: =?utf-8?q?JVZoo_Integration_Site_Cancelation_-_"
+            "=5Bjohn=40smith=2Ename=5D?=",
+            msg
+        )
+
+        # test 'to' email address
+        self.assertIn(
+            "To: mail@plone.test",
+            msg
+        )
+
+        # test 'from' email address
+        self.assertIn(
+            "From: mail@plone.test",
+            msg
+        )
+
+        # test member
+        self.assertIn(
+            "Member: John Smith",
+            msg
+        )
+
+        # test username
+        self.assertIn(
+            "Member email/username: john@smith.name",
+            msg
+        )
 
 
 def test_suite():
