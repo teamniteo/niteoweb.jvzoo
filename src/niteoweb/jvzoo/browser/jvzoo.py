@@ -46,8 +46,7 @@ class JVZooView(BrowserView):
             # verify and parse post
             self._verify_POST(params)
             data = self._parse_POST(params)
-            if data['transaction_type'] == 'CANCEL-REBILL' or \
-                    data['transaction_type'] == 'RFND':
+            if data['transaction_type'] in ['CANCEL-REBILL', 'RFND']:
                 self.auto_cancel_user(data['username'], data)
             else:
                 self.create_or_update_member(data['username'], data)
