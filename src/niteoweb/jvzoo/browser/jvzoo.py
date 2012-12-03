@@ -22,6 +22,7 @@ import hashlib
 import random
 import string
 import logging
+import time
 
 logger = logging.getLogger("niteoweb.jvzoo")
 
@@ -45,7 +46,8 @@ class JVZooView(BrowserView):
             # verify and parse post
             self._verify_POST(params)
             data = self._parse_POST(params)
-            if data['transaction_type'] == 'CANCEL-REBILL':
+            if data['transaction_type'] == 'CANCEL-REBILL' or \
+                    data['transaction_type'] == 'RFND':
                 self.auto_cancel_user(data['username'], data)
             else:
                 self.create_or_update_member(data['username'], data)
@@ -93,6 +95,8 @@ class JVZooView(BrowserView):
         :type params: dict
 
         """
+        # if ctranstime is empty, set current time
+        itime = int(params['ctranstime']) if params['ctranstime'] else time.time()
         return {
             'username': params['ccustemail'],
             'email': params['ccustemail'],
@@ -102,7 +106,7 @@ class JVZooView(BrowserView):
             'affiliate': params['ctransaffiliate'],
             'last_purchase_id': params['ctransreceipt'],
             'last_purchase_timestamp': DateTime(
-                int(params['ctranstime']),
+                itime,
                 datefmt='epoch'
             ),
             'transaction_type': params['ctransaction'],
