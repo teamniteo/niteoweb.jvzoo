@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3 (Unreleased)
----------------
+0.3 (2012-12-03)
+----------------
 
 - When a member is cancelled, send notification email to site administrator.
   [matejc]
@@ -14,8 +14,8 @@ Changelog
   [matejc]
 
 
-0.2 (2012-11-6)
----------------
+0.2 (2012-11-06)
+----------------
 
 - Add functionality for auto cancelation and tests.
   [matejc]
